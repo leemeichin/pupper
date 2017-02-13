@@ -9,11 +9,10 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Lee Machin']
   spec.email         = ['lee@typeform.com']
   spec.summary       = 'Interact with APIs as if they were ActiveRecord models.'
-  spec.description   = File.read(File.expand_path('README.md', __dir__))
   spec.homepage      = 'https://github.com/leemachin/pupper'
   spec.license       = 'MIT'
 
-  spec.files         = `git ls-files -z`.split('\x0').reject do |f|
+  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
   end
 
@@ -25,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rspec'
 
-  spec.add_dependency 'activessupport', '~> 5.0'
+  spec.add_dependency 'activesupport', '~> 5.0'
   spec.add_dependency 'activemodel', '~> 5.0'
   spec.add_dependency 'faraday'
   spec.add_dependency 'faraday_middleware'
