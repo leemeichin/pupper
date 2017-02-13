@@ -57,7 +57,7 @@ module Pupper
       private
 
       def audit_model
-        @audit_model ||= Pupper.config.audit_with.classify.constantize
+        @audit_model ||= Pupper.config.audit_with.to_s.classify.constantize
       end
     end
   end
