@@ -1,3 +1,10 @@
+require 'active_support/all'
+require 'active_model'
+require 'faraday'
+require 'faraday_middleware'
+require 'oj'
+require 'typhoeus/adapters/faraday'
+
 require 'pupper/version'
 require 'pupper/backend'
 require 'pupper/model'

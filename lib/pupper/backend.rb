@@ -1,4 +1,3 @@
-require 'typhoeus/adapters/faraday'
 require 'pupper/parse_json'
 
 module Pupper

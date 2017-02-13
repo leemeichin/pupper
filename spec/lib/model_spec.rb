@@ -2,7 +2,8 @@ require 'spec_helper'
 
 RSpec.describe Pupper::Model, 'integration of ApiModel into subclasses' do
   let(:test_user) do
-    stub_const 'TestUser', (Class.new(described_class) do
+    stub_const 'TestUser', (Class.new do
+      include Pupper::Model
       attr_accessor :uid, :name
       audit :call_me_maybe
 
@@ -65,13 +66,14 @@ RSpec.describe Pupper::Model, 'integration of ApiModel into subclasses' do
         subject.update(name: error_name) do
           raise StandardError
         end
-      end.to raise_error(StandardError).and not_to receive(:create_audit_log)
+      end.to raise_error(StandardError).and.not_to receive(:create_audit_log)
     end
   end
 
   describe 'adding custom auditing' do
     it 'creates an audit log for a custom auditable method' do
-      expect { subject.call_me_maybe }.and to receive(:create_audit_log)
+      expect(subject).to receive(:create_audit_log)
+      subject.call_me_maybe
     end
   end
 end
