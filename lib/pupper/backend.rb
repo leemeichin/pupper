@@ -42,7 +42,7 @@ module Pupper
         builder.response :logger if Rails.env.development?
         builder.response :raise_error
         builder.adapter :typhoeus
-        builder.headers['User-Agent'] = "nimda v#{::Config.nimda_version}"
+        builder.headers['User-Agent'] = Pupper.config.user_agent
       end
     end
 
