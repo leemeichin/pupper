@@ -1,5 +1,5 @@
 require 'pupper/version'
-require 'pupper/client'
+require 'pupper/backend'
 require 'pupper/model'
 
 module Pupper
