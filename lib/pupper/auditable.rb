@@ -31,7 +31,7 @@ module Pupper
       end
 
       def audit_logs
-        AuditLog.where(auditable_type: model_name.name, auditable_id: primary_key)
+        audit_model.where(auditable_type: model_name.name, auditable_id: primary_key)
       end
 
       def create_audit_log
