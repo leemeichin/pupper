@@ -33,7 +33,7 @@ module Pupper
       end
 
       def primary_key
-        send(self.class.primary_key)
+        attributes.fetch(self.class.primary_key)
       end
     end
 
