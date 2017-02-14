@@ -1,6 +1,7 @@
 require 'pupper/parse_json'
 
 module Pupper
+  # Provides an interface to build an API Client, that can be used by [Model]
   class Backend
     class BaseUrlNotDefined < StandardError; end
 
@@ -9,7 +10,11 @@ module Pupper
     delegate :base_url, to: :class
 
     class << self
+      # Sets the base URL the API client will call
+      # @return [String] the URL (plus - optionally - a path)
       attr_writer :base_url
+
+      protected
 
       def base_url
         if @base_url.nil?

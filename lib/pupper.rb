@@ -13,6 +13,11 @@ module Pupper
 
   mattr_accessor :config
 
+  # Changes some of Pupper's underlying assumptions
+  # such as the name of the ActiveRecord model used for auditing
+  # and the user agent passed into Faraday/Typhoeus
+  #
+  # @yield [self.config] The Pupper::Config instance
   def self.configure
     self.config ||= Config.new
     yield self.config
