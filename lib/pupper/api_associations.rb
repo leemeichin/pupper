@@ -35,10 +35,10 @@ module Pupper
       def create_attribute(name, foreign_key = nil, value = nil)
         self.class.attr_accessor(name)
 
-        return unless foreign_key.present?
-
-        excluded_attrs << name if foreign_key.present?
-        send("#{name}#{foreign_key.prepend('_')}=", value)
+        if foreign_key.present?
+          excluded_attrs << name
+          send("#{name}_#{foreign_key}=", value)
+        end
       end
 
       def find_assoc_type(name)
