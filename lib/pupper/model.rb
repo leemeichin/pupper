@@ -52,14 +52,21 @@ module Pupper
         @primary_key ||= :uid
       end
 
+      # @overload static=(true_or_false)
+      #   Declare whether or not the model has a corresponding API client or not.
+      #   (default: `false`)
+      #
+      #   == Parameters:
+      #   true_or_false::
+      #     `true` if the model has no API, `false` otherwise.
       def static?
         @static ||= false
       end
 
       def backend
+        return if static?
         @backend ||= "#{model_name.name.pluralize}Client".constantize.new
       rescue NameError
-        return unless static?
         raise NoSuchBackend, <<-ERR
           Model #{model_name.name} is looking for an API client that doesn't exist!
 
