@@ -16,7 +16,7 @@ module Pupper
       include Pupper::TrackableAttributes
       include Pupper::ApiAssociations
 
-      delegate :backend, :static?, to: :class
+      delegate :backend, to: :class
 
       def initialize(**args)
         assocs, attrs = args.partition do |attr, value|
@@ -64,6 +64,7 @@ module Pupper
       end
 
       def backend
+        return if static?
         @backend ||= "#{model_name.name.pluralize}Client".constantize.new
       rescue NameError
         raise NoSuchBackend, <<-ERR
@@ -81,6 +82,10 @@ module Pupper
 
         ERR
       end
+    end
+
+    def static?
+      self.class.static?
     end
 
     def to_json(*)
