@@ -38,15 +38,20 @@ module Pupper
     end
 
     class_methods do
-      attr_writer :primary_key, :backend
+      attr_writer :primary_key, :backend, :static
 
       def primary_key
         @primary_key ||= :uid
       end
 
+      def static?
+        @static ||= false
+      end
+
       def backend
         @backend ||= "#{model_name.name.pluralize}Client".constantize.new
       rescue NameError
+        return unless static?
         raise NoSuchBackend, <<-ERR
           Model #{model_name.name} is looking for an API client that doesn't exist!
 
