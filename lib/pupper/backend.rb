@@ -14,8 +14,6 @@ module Pupper
       # @return [String] the URL (plus - optionally - a path)
       attr_writer :base_url
 
-      protected
-
       def base_url
         if @base_url.nil?
           raise BaseUrlNotDefined, <<-ERR
