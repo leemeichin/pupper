@@ -38,7 +38,7 @@ module Pupper
         return unless foreign_key.present?
 
         excluded_attrs << name if foreign_key.present?
-        send("#{name}_#{foreign_key}=", value)
+        send("#{name}#{foreign_key.prepend('_')}=", value)
       end
 
       def find_assoc_type(name)
