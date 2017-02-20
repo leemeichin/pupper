@@ -16,7 +16,7 @@ module Pupper
       include Pupper::TrackableAttributes
       include Pupper::ApiAssociations
 
-      delegate :backend, to: :class
+      delegate :backend, :static?, to: :class
 
       def initialize(**args)
         assocs, attrs = args.partition do |attr, value|
@@ -29,7 +29,7 @@ module Pupper
 
         changes_applied
 
-        backend.register_model(self)
+        backend.register_model(self) unless static?
       end
 
       def primary_key
@@ -64,7 +64,6 @@ module Pupper
       end
 
       def backend
-        return if static?
         @backend ||= "#{model_name.name.pluralize}Client".constantize.new
       rescue NameError
         raise NoSuchBackend, <<-ERR
