@@ -40,6 +40,14 @@ module Pupper
     class_methods do
       attr_writer :primary_key, :backend, :static
 
+      # @overload primary_key=(identifier)
+      #   Set the identifier the including model will use by default
+      #   when finding or updating (defaults to `:uid`)
+      #
+      #   == Parameters:
+      #   identifier::
+      #     A symbol refering to the identifying field in the model. e.g.
+      #     `:id`.
       def primary_key
         @primary_key ||= :uid
       end
