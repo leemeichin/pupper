@@ -14,7 +14,7 @@ module Pupper
         @attributes ||= {}
       end
 
-      def changed_attributes
+      def new_changes
         changes.transform_values(&:last)
       end
 
