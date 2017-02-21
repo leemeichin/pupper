@@ -1,6 +1,9 @@
 require 'bundler/setup'
 require 'pupper'
 
+require 'pry'
+require 'byebug'
+
 RSpec.configure do |config|
   Dir[File.expand_path('./support/**/*.rb', __dir__)].each { |f| require f }
 

@@ -20,7 +20,7 @@ module Pupper
 
       def initialize(**args)
         assocs, attrs = args.partition do |attr, value|
-          attr.to_s =~ /_u?id$/ || value.is_a?(Hash)
+          attr.to_s =~ /_u?id$/ || value.is_a?(Hash) || value.is_a?(Array)
         end.map(&Hash.method(:[]))
 
         assocs = build_associations(assocs)
@@ -29,7 +29,7 @@ module Pupper
 
         changes_applied
 
-        backend.register_model(self) unless static?
+        backend.register_model(self) unless backend == :none
       end
 
       def primary_key
@@ -38,7 +38,7 @@ module Pupper
     end
 
     class_methods do
-      attr_writer :primary_key, :backend, :static
+      attr_writer :primary_key, :backend
 
       # @overload primary_key=(identifier)
       #   Set the identifier the including model will use by default
@@ -52,25 +52,16 @@ module Pupper
         @primary_key ||= :uid
       end
 
-      # @overload static=(true_or_false)
+      # @overload backend=(class_or_symbol)
       #   Declare whether or not the model has a corresponding API client or not.
-      #   (default: `false`)
+      #   (default: including class, plural, + client, e.g. `Form` => `FormsClient`)
       #
       #   == Parameters:
-      #   true_or_false::
-      #     `true` if the model has no API, `false` otherwise.
-      def static?
-        @static ||= false
-      end
-
+      #   class_or_symbol::
+      #     `:none` if the model has no API, constant otherwise.
       def backend
-        return if static?
         @backend ||= "#{model_name.name.pluralize}Client".constantize.new
       end
-    end
-
-    def static?
-      self.class.static?
     end
 
     def to_json(*)

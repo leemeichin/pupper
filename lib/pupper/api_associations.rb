@@ -35,6 +35,8 @@ module Pupper
       def create_attribute(name, foreign_key = nil, value = nil)
         self.class.attr_accessor(name)
         excluded_attrs << name if foreign_key.present?
+
+        name = foreign_key.present? ? "#{name}_#{foreign_key}" : name
         send("#{name}=", value)
       end
 
@@ -56,7 +58,8 @@ module Pupper
 
       def create_has_many_assoc_model(name, values)
         create_attribute(name)
-        values.map(&name.constantize)
+        model = "#{self.class.parent}/#{name.to_s.singularize}".classify.constantize
+        values.map(&model.method(:new))
       end
 
       def create_assoc_model(assocs, name, foreign_key, value)
@@ -66,7 +69,6 @@ module Pupper
         when :has_many
           assocs[name] = create_has_many_assoc_model(name, value)
         else
-          Rails.logger.warn("Try to use an association for #{name} in #{model_name.name}!")
           assocs[:"#{name}_#{foreign_key}"] = value
         end
       end
