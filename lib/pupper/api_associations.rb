@@ -7,12 +7,12 @@ module Pupper
         @associations ||= { has_one: [], has_many: [] }
       end
 
-      def has_one(assoc)
-        associations[:has_one] << assoc
+      def has_one(*assocs)
+        associations[:has_one].concat(assocs)
       end
 
-      def has_many(assoc)
-        associations[:has_many] << assoc
+      def has_many(*assocs)
+        associations[:has_many].concat(assocs)
       end
     end
 
@@ -34,11 +34,8 @@ module Pupper
 
       def create_attribute(name, foreign_key = nil, value = nil)
         self.class.attr_accessor(name)
-
-        if foreign_key.present?
-          excluded_attrs << name
-          send("#{name}_#{foreign_key}=", value)
-        end
+        excluded_attrs << name if foreign_key.present?
+        send("#{name}=", value)
       end
 
       def find_assoc_type(name)
