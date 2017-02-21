@@ -69,7 +69,8 @@ module Pupper
         when :has_many
           assocs[name] = create_has_many_assoc_model(name, value)
         else
-          assocs[:"#{name}_#{foreign_key}"] = value
+          name = foreign_key.present? ? "#{name}_#{foreign_key}" : name
+          assocs[name.to_sym] = value
         end
       end
 
