@@ -14,6 +14,10 @@ module Pupper
         @attributes ||= {}
       end
 
+      def changed_attributes
+        changes.transform_values(&:last)
+      end
+
       def reload!
         restore_attributes
       end
