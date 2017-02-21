@@ -45,9 +45,9 @@ module Pupper
         )
       end
 
-      def update_attributes(**attrs)
+      def update_attributes(attrs)
         run_callbacks(:update) do
-          assign_attributes(**attrs)
+          assign_attributes(attrs)
           backend.update
         end
 
