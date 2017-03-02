@@ -22,7 +22,7 @@ RSpec.describe Pupper::Model, 'integration of ApiModel into subclasses' do
 
   before do
     test_user.backend = double
-    allow(test_user.backend).to receive(:update).with(test_user)
+    allow(test_user.backend).to receive(:update)
     allow(test_user.backend).to receive(:register_model).with(test_user)
   end
 
@@ -62,10 +62,10 @@ RSpec.describe Pupper::Model, 'integration of ApiModel into subclasses' do
     end
 
     it 'creates no audit log when updating fails' do
+      allow(subject.backend).to receive(:update).and_raise StandardError
+
       expect do
-        subject.update(name: error_name) do
-          raise StandardError
-        end
+        subject.update_attributes(name: error_name)
       end.to raise_error(StandardError).and.not_to receive(:create_audit_log)
     end
   end

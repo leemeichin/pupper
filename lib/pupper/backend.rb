@@ -7,12 +7,16 @@ module Pupper
 
     attr_reader :client, :model
 
-    delegate :base_url, to: :class
+    delegate :base_url, :headers, to: :class
 
     class << self
       # Sets the base URL the API client will call
       # @return [String] the URL (plus - optionally - a path)
-      attr_writer :base_url
+      attr_writer :base_url, :headers
+
+      def headers
+        @headers ||= {}
+      end
 
       def base_url
         if @base_url.nil?
@@ -38,13 +42,13 @@ module Pupper
     end
 
     def initialize
-      @client = Faraday.new(base_url, ssl: { verify: Rails.env.production? }) do |builder|
+      @client = Faraday.new(base_url, ssl: Pupper.config.ssl) do |builder|
         builder.request :json
         builder.use Pupper::ParseJson
-        builder.response :logger if Rails.env.development?
+        builder.response :logger if Pupper.config.logging?
         builder.response :raise_error
         builder.adapter :typhoeus
-        builder.headers['User-Agent'] = Pupper.config.user_agent
+        builder.headers = headers.merge!('User-Agent' => Pupper.config.user_agent)
       end
     end
 

@@ -19,5 +19,9 @@ RSpec.configure do |config|
       name: 'Fakey McFakerson',
       email: 'fake@example.com'
     )
+
+    c.logging = false
+
+    c.ssl = { verify: false }
   end
 end

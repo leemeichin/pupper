@@ -24,12 +24,18 @@ module Pupper
   end
 
   class Config
-    attr_accessor :audit_with, :user_agent
+    attr_accessor :audit_with, :user_agent, :ssl, :logging
     thread_mattr_accessor :current_user
 
     def initialize
       @audit_with = :audit_log
       @user_agent = "pupper (v: #{Pupper::VERSION})"
+      @ssl = {}
+      @logging = false
+    end
+
+    def logging?
+      @logging
     end
   end
 end
