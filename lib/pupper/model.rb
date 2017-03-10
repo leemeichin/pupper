@@ -19,13 +19,13 @@ module Pupper
       delegate :backend, to: :class
 
       def initialize(**args)
-        args.slice!(*self.class._attributes)
-
         assocs, attrs = args.partition do |attr, value|
           attr.to_s =~ /_u?id$/ || value.is_a?(Hash) || value.is_a?(Array)
         end.map(&Hash.method(:[]))
 
         assocs = build_associations(assocs)
+
+        [attrs, assocs].map { |args| args.slice!(*self.class._attributes) }
 
         super(**attrs, **assocs)
 
