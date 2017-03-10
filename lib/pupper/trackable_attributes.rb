@@ -45,7 +45,7 @@ module Pupper
         # override the default so that we can hook into the created methods
         define_attribute_methods(*attrs)
 
-        _attributes << attrs
+        _attributes.concat(attrs)
 
         attrs.each do |attr|
           define_method attr do

@@ -43,6 +43,12 @@ RSpec.describe Pupper::Model, 'integration of ApiModel into subclasses' do
     it 'marks the model as unchanged' do
       expect(subject).not_to be_changed
     end
+
+    it 'ignores unknown attributes during mass assignment' do
+      expect do
+        test_user.new(uid: uid, name: original_name, bad: true)
+      end.not_to raise_error
+    end
   end
 
   describe 'logging changes in the model' do
@@ -66,7 +72,7 @@ RSpec.describe Pupper::Model, 'integration of ApiModel into subclasses' do
 
       expect do
         subject.update_attributes(name: error_name)
-      end.to raise_error(StandardError).and.not_to receive(:create_audit_log)
+      end.to raise_error(StandardError)
     end
   end
 

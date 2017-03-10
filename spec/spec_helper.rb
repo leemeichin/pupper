@@ -3,6 +3,7 @@ require 'pupper'
 
 require 'pry'
 require 'byebug'
+require 'rspec/active_model/mocks'
 
 RSpec.configure do |config|
   Dir[File.expand_path('./support/**/*.rb', __dir__)].each { |f| require f }
