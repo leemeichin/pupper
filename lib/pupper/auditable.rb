@@ -51,7 +51,7 @@ module Pupper
       end
 
       def audit_logs
-        audit_model.where(auditable_type: model_name.name, auditable_id: primary_key)
+        audit_model.where(auditable_type: model_name.name, auditable_id: primary_key).order(created_at: :desc)
       end
 
       def log_update
