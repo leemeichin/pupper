@@ -67,15 +67,7 @@ module Pupper
       def create_audit_log(action, e = nil)
         return unless changed?
 
-        audit_model.create(
-          action: action,
-          auditable_type: model_name.name,
-          auditable_id: primary_key,
-          user: Pupper.config.current_user,
-          what_changed: changes,
-          success: e.nil?,
-          exception: e
-        )
+        log_action(action, changes, e)
       end
 
       def log_action(action, changes = nil, e = nil)
