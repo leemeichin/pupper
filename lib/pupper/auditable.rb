@@ -27,7 +27,7 @@ module Pupper
               begin
                 super
               rescue Exception => e
-                log_action_failure('#{meth}', e)
+                log_action('#{meth}', e = e)
                 throw e
               end
               log_action '#{meth}'
