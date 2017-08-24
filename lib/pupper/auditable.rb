@@ -42,8 +42,9 @@ module Pupper
     included do
       extend ActiveModel::Callbacks
 
-      define_model_callbacks :update, only: :around
+      define_model_callbacks :update, :destroy, only: :around
       around_update :log_update
+      around_destroy :log_destroy
 
       def audit(&block)
         run_callbacks :update, &block
@@ -62,6 +63,16 @@ module Pupper
           throw e
         end
         create_audit_log 'update'
+      end
+
+      def log_destroy
+        begin
+          yield
+        rescue Exception => e
+          log_action('delete', nil, e)
+          throw e
+        end
+        log_action('delete')
       end
 
       def create_audit_log(action, e = nil)
@@ -91,6 +102,12 @@ module Pupper
 
         changes_applied
         resp
+      end
+
+      def destroy
+        run_callbacks(:destroy) do
+          backend.destroy
+        end
       end
 
       private
