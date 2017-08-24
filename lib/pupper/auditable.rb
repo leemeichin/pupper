@@ -55,24 +55,14 @@ module Pupper
         audit_model.where(auditable_type: model_name.name, auditable_id: primary_key).order(created_at: :desc)
       end
 
-      def log_update
-        begin
-          yield
-        rescue Exception => e
-          create_audit_log('update', e)
-          throw e
-        end
-        create_audit_log 'update'
+      def log_update(&block)
+        log = ->(e = nil) { create_audit_log 'update', e }
+        _log_action(log, &block)
       end
 
-      def log_destroy
-        begin
-          yield
-        rescue Exception => e
-          log_action('delete', nil, e)
-          throw e
-        end
-        log_action('delete')
+      def log_destroy(&block)
+        log = ->(e = nil) { log_action('delete', nil, e) }
+        _log_action(log, &block)
       end
 
       def create_audit_log(action, e = nil)
@@ -114,6 +104,16 @@ module Pupper
 
       def audit_model
         @audit_model ||= Pupper.config.audit_with.to_s.classify.constantize
+      end
+
+      def _log_action(log, &block)
+        begin
+          yield block
+        rescue Exception => e
+          log.call e
+          throw e
+        end
+        log.call
       end
     end
   end
