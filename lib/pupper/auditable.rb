@@ -27,7 +27,7 @@ module Pupper
               begin
                 super
               rescue Exception => e
-                log_action('#{meth}', e = e)
+                log_action('#{meth}', nil, e = e)
                 throw e
               end
               log_action '#{meth}'
@@ -51,7 +51,7 @@ module Pupper
       end
 
       def audit_logs
-        audit_model.where(auditable_type: model_name.name, auditable_id: primary_key, success: true).order(created_at: :desc)
+        audit_model.where(auditable_type: model_name.name, auditable_id: primary_key).order(created_at: :desc)
       end
 
       def log_update
