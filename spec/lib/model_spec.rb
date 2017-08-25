@@ -56,23 +56,45 @@ RSpec.describe Pupper::Model, 'integration of ApiModel into subclasses' do
 
     let(:change_attrs) do
       {
+        action: 'update',
+        auditable_id: 123,
         user: Pupper.config.current_user,
         auditable_type: 'TestUser',
-        what_changed: { name: [original_name, new_name] }
+        what_changed: { 'name': [original_name, new_name] },
+        success: true,
+        exception: nil
+      }
+    end
+
+    let(:exception) { StandardError }
+
+    let(:change_attrs_fail) do
+      {
+        action: 'update',
+        auditable_id: 123,
+        user: Pupper.config.current_user,
+        auditable_type: 'TestUser',
+        what_changed: { 'name': [original_name, error_name] },
+        success: false,
+        exception: exception
       }
     end
 
     it 'creates an audit log when updating' do
+      audit_model = class_double('AuditLog').as_stubbed_const
+      expect(audit_model).to receive(:create).with(change_attrs)
       subject.update_attributes(name: new_name)
-      expect(audit_log).to have_attributes(change_attrs)
     end
 
-    it 'creates no audit log when updating fails' do
-      allow(subject.backend).to receive(:update).and_raise StandardError
+    it 'creates audit log when updating fails' do
+      audit_model = class_double('AuditLog').as_stubbed_const
+      allow(subject.backend).to receive(:update).and_raise exception
+
+      expect(audit_model).to receive(:create).with(change_attrs_fail)
 
       expect do
         subject.update_attributes(name: error_name)
-      end.to raise_error(StandardError)
+      end.to raise_error(exception)
     end
   end
 
