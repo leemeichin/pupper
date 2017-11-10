@@ -77,7 +77,7 @@ module Pupper
           auditable_type: model_name.name,
           auditable_id: primary_key,
           user: Pupper.config.current_user,
-          what_changed: changes,
+          metadata: changes,
           success: e.nil?,
           exception: e
         )
